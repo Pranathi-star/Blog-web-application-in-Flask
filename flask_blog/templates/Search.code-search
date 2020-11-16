@@ -1,0 +1,247 @@
+# Query: url_for
+# ContextLines: 1
+
+66 results - 16 files
+
+blog\flask_blog\posts\routes.py:
+   1: from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
+   2  from flask_login import current_user, login_required
+
+  17          flash('Your post has been created!', 'success')
+  18:         return redirect(url_for('main.home'))
+  19      return render_template('create_post.html', title = 'New Post', form = form, legend = 'New Post')
+
+  37          flash("Your post has been updated", 'success')
+  38:         return redirect(url_for('posts.post', post_id = post.id))
+  39      elif request.method == 'GET':
+
+  52      flash("Your post has been deleted", 'success')
+  53:     return redirect(url_for('main.home'))
+
+blog\flask_blog\templates\home.html:
+   4      <article class="media content-section">
+   5:       <img class = "rounded-circle article-img" src="{{url_for('static', filename = 'profile_pics/'+ posts.post.author.image_file)}}">
+   6          <div class="media-body">
+   7            <div class="article-metadata">
+   8:             <a class="mr-2" href="{{ url_for('users.user_posts', username = posts.post.author.username)}}">{{ post.author.username }}</a>
+   9              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+  10            </div>
+  11:           <h2><a class="article-title" href="{{url_for('posts.post', post_id = posts.post.id)}}">{{ post.title }}</a></h2>
+  12            <p class="article-content">{{ post.content }}</p>
+
+  18          {% if posts.page == page_num %}
+  19:           <a class = "btn btn-info mb-4" href="{{url_for('main.home', page = page_num)}}">{{ page_num }}</a>
+  20          {%else%} 
+  21:           <a class = "btn btn-outline-info mb-4" href="{{url_for('main.home', page = page_num)}}">{{ page_num }}</a>
+  22          {% endif %}     
+
+blog\flask_blog\templates\layouts.html:
+   8          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+   9:         <link rel="stylesheet" type = "text/css" href = "{{url_for('static', filename='main.css')}}">
+  10          {% if title %}
+
+  25                    <div class="navbar-nav  mr-auto">
+  26:                     <a class="nav-item nav-link" href="{{ url_for('main.home')}}">Home</a>
+  27:                     <a class="nav-item nav-link" href="{{ url_for('main.about')}}">About</a>
+  28                    </div>
+
+  31                      {% if current_user.is_authenticated%}
+  32:                     <a class="nav-item nav-link" href="{{ url_for('users.new_post')}}">New Post</a>
+  33:                     <a class="nav-item nav-link" href="{{ url_for('users.account')}}">Account</a>
+  34:                     <a class="nav-item nav-link" href="{{ url_for('users.logout')}}">Logout</a>
+  35                      {% else%}
+  36:                       <a class="nav-item nav-link" href="{{ url_for('users.login')}}">Login</a>
+  37:                       <a class="nav-item nav-link" href="{{ url_for('users.register')}}">Register</a>
+  38                      {% endif %}
+
+blog\flask_blog\templates\login.html:
+  42              <small class="text-muted ml-2">
+  43:                 <a href="{{ url_for('users.reset_request')}}">Forgot Password?</a>
+  44              </small>
+
+  48          <small class="text-muted">
+  49:             Need an account? <a class = "ml-2" href="{{ url_for('users.register') }}">Sign Up Now</a>
+  50          </small>
+
+blog\flask_blog\templates\post.html:
+   3      <article class="media content-section">
+   4:         <img class = "rounded-circle article-img" src="{{url_for('static', filename = 'profile_pics/'+ posts.post.author.image_file)}}">
+   5          <div class="media-body">
+   6              <div class="article-metadata">
+   7:                 <a class="mr-2" href="{{ url_for('user_posts', username = posts.post.author.username)}}">{{ post.author.username }}</a>
+   8                  <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+
+  10                      <div>
+  11:                         <a class = "btn btn-secondary btn-sm mt-1 mb-1" href="{{url_for('posts.update_post', post_id = posts.post.id)}}">Update</a>
+  12                          <button type = "button" class = "btn btn-danger btn-sm m-1"  data-toggle="modal" data-target="#deleteModal">Delete</button>
+
+  31              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  32:             <form action="{{url_for('posts.delete_post', post_id = posts.post.id)}}", method = "POST">
+  33                  <input class = "btn btn-danger" type="submit" value="Delete">
+
+blog\flask_blog\templates\register.html:
+  67          <small class="text-muted">
+  68:             Already have an account? <a class = "ml-2" href="{{ url_for('users.login') }}">Sign In</a>
+  69          </small>
+
+blog\flask_blog\templates\user_posts.html:
+   5      <article class="media content-section">
+   6:       <img class = "rounded-circle article-img" src="{{url_for('static', filename = 'profile_pics/'+ posts.post.author.image_file)}}">
+   7          <div class="media-body">
+   8            <div class="article-metadata">
+   9:             <a class="mr-2" href="{{ url_for('users.user_posts', username = posts.post.author.username)}}">{{ post.author.username }}</a>
+  10              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+  11            </div>
+  12:           <h2><a class="article-title" href="{{url_for('posts.post', post_id = posts.post.id)}}">{{ post.title }}</a></h2>
+  13            <p class="article-content">{{ post.content }}</p>
+
+  19          {% if posts.page == page_num %}
+  20:           <a class = "btn btn-info mb-4" href="{{url_for('users.user_posts', username = users.user.username, page = page_num)}}">{{ page_num }}</a>
+  21          {%else%} 
+  22:           <a class = "btn btn-outline-info mb-4" href="{{url_for('users.user_posts', username = users.user.username, page = page_num)}}">{{ page_num }}</a>
+  23          {% endif %}     
+
+blog\flask_blog\users\routes.py:
+   1: from flask import render_template, Blueprint, url_for, flash, redirect, request
+   2  from flask_login import login_user, current_user, logout_user, login_required
+
+  12      if current_user.is_authenticated:
+  13:         return redirect(url_for('main.home'))
+  14      form = RegistrationForm()
+
+  20          flash('Your account has been created! You are now able to log in', 'success')
+  21:         return redirect(url_for('users.login'))
+  22      return render_template('register.html', title = "Register", form = form)
+
+  26      if current_user.is_authenticated:
+  27:         return redirect(url_for('main.home'))
+  28      form = LoginForm()
+
+  33              next_page = request.args.get('next')
+  34:             return redirect(next_page) if next_page else redirect(url_for('main.home'))
+  35          else:
+
+  41      logout_user()
+  42:     return redirect(url_for('main.home'))
+  43  
+
+  55          flash('Your account has been updated!', 'success')
+  56:         return redirect(url_for('users.account'))
+  57      elif request.method == 'GET':
+
+  59          form.email.data = current_user.email
+  60:     image_file = url_for('static', filename='profile_pics/' + users.current_user.image_file)
+  61      return render_template('account.html', title = 'Account', image_file = image_file, form = form)
+
+  72      if current_user.is_authenticated:
+  73:         return redirect(url_for('main.home'))
+  74      form = RequestResetForm()
+
+  78          flash('An email has been sent with instructions to reset your password', 'info')
+  79:         return redirect(url_for('users.login'))
+  80      return render_template('reset_request.html', title = "Reset Password", form = form)
+
+  84      if current_user.is_authenticated:
+  85:         return redirect(url_for('main.home'))
+  86      user = User.verify_reset_token(token)
+
+  88          flash("That is an invalid/expired token", 'warning')
+  89:         return redirect(url_for('users.reset_request'))
+  90      form = ResetPasswordForm()
+
+  96          flash('Your password has been updated! You are now able to log in', 'success')
+  97:         return redirect(url_for('users.login'))
+  98      return render_template('reset_token.html', title = "Reset Password", form = form)
+
+blog\flask_blog\users\utils.py:
+   3  from PIL import Image
+   4: from flask import url_for
+   5  from flask_mail import Message
+
+  22      msg.body = f''' To reset your password, visit the following link: 
+  23: {url_for('reset_token', token = token, _external = True)}
+  24  If you did not make this request then simply ignore this email and no changes will be made.
+
+venv\Lib\site-packages\flask\__init__.py:
+  43  from .helpers import stream_with_context
+  44: from .helpers import url_for
+  45  from .json import jsonify
+
+venv\Lib\site-packages\flask\app.py:
+    56  from .helpers import locked_cached_property
+    57: from .helpers import url_for
+    58  from .json import jsonify
+
+   457  
+   458:         #: A list of functions that are called when :meth:`url_for` raises a
+   459          #: :exc:`~werkzeug.routing.BuildError`.  Each function registered here
+
+   782          rv.globals.update(
+   783:             url_for=url_for,
+   784              get_flashed_messages=get_flashed_messages,
+
+  2199      def handle_url_build_error(self, error, endpoint, values):
+  2200:         """Handle :class:`~werkzeug.routing.BuildError` on :meth:`url_for`.
+  2201          """
+
+venv\Lib\site-packages\flask\blueprints.py:
+  273          """Like :meth:`Flask.route` but for a blueprint.  The endpoint for the
+  274:         :func:`url_for` function is prefixed with the name of the blueprint.
+  275          """
+
+  285          """Like :meth:`Flask.add_url_rule` but for a blueprint.  The endpoint for
+  286:         the :func:`url_for` function is prefixed with the name of the blueprint.
+  287          """
+
+venv\Lib\site-packages\flask\helpers.py:
+  225  
+  226: def url_for(endpoint, **values):
+  227      """Generates a URL to the given endpoint with the method provided.
+
+  236  
+  237:         url_for('.index')
+  238  
+
+  244      To integrate applications, :class:`Flask` has a hook to intercept URL build
+  245:     errors through :attr:`Flask.url_build_error_handlers`.  The `url_for`
+  246      function results in a :exc:`~werkzeug.routing.BuildError` when the current
+
+  249      it is not ``None``, which can return a string to use as the result of
+  250:     `url_for` (instead of `url_for`'s default to raise the
+  251      :exc:`~werkzeug.routing.BuildError` exception) or re-raise the exception.
+
+  254          def external_url_handler(error, endpoint, values):
+  255:             "Looks up an external URL when `url_for` cannot build a URL."
+  256              # This is an example of hooking the build_error_handler.
+
+  267                      raise error
+  268:             # url_for will use this result, instead of raising BuildError.
+  269              return url
+
+  273      Here, `error` is the instance of :exc:`~werkzeug.routing.BuildError`, and
+  274:     `endpoint` and `values` are the arguments passed into `url_for`.  Note
+  275      that this is for building URLs outside the current application, and not for
+
+venv\Lib\site-packages\flask_login\utils.py:
+  15  
+  16: from flask import (_request_ctx_stack, current_app, request, session, url_for,
+  17                     has_request_context)
+
+  96      else:
+  97:         return url_for(login_view)
+  98  
+
+venv\Lib\site-packages\flask_sqlalchemy\__init__.py:
+  388                    {% if page != pagination.page %}
+  389:                     <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+  390                    {% else %}
+
+venv\Lib\site-packages\pip\_internal\models\index.py:
+  15          self.netloc = urllib_parse.urlsplit(url).netloc
+  16:         self.simple_url = self._url_for_path('simple')
+  17:         self.pypi_url = self._url_for_path('pypi')
+  18  
+
+  23  
+  24:     def _url_for_path(self, path):
+  25          # type: (str) -> str
